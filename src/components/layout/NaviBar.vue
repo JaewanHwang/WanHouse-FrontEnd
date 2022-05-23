@@ -10,19 +10,19 @@
       <v-col>
         <v-toolbar-items>
           <router-link :to="{ name: 'home' }" class="link">
-            <v-btn text>home</v-btn>
+            <button text>home</button>
           </router-link>
           <router-link :to="{ name: 'user' }" class="link">
-            <v-btn text>user</v-btn>
+            <button text>user</button>
           </router-link>
           <router-link :to="{ name: 'map' }" class="link">
-            <v-btn text>map</v-btn>
+            <button text>map</button>
           </router-link>
           <router-link :to="{ name: 'board' }" class="link">
-            <v-btn text>board</v-btn>
+            <button text>board</button>
           </router-link>
           <router-link :to="{ name: 'qna' }" class="link">
-            <v-btn text>qna</v-btn>
+            <button text>qna</button>
           </router-link>
         </v-toolbar-items>
       </v-col>
