@@ -1,18 +1,32 @@
 <template>
-  <v-main>
+  <div style="width: 100%; height: 95%; position: relative">
     <v-tabs>
       <v-tab>아파트 검색</v-tab>
       <v-tab>관심 아파트</v-tab>
     </v-tabs>
+    <div id="search-container">
+      <v-toolbar dense floating elevation="10">
+        <v-text-field
+          hide-details
+          prepend-icon="mdi-magnify"
+          filled
+          label="법정동 혹은 아파트"
+          clearable
+        ></v-text-field>
+
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-toolbar>
+    </div>
+
     <div id="map" style="width: 100%; height: 100%"></div>
-  </v-main>
+  </div>
 </template>
 <script>
 export default {
   name: "MapView",
-  props: {
-    msg: String,
-  },
+  props: {},
   data() {
     return { map: null };
   },
@@ -35,3 +49,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+#search-container {
+  position: absolute;
+  top: 6rem;
+  left: 3rem;
+  z-index: 2;
+}
+</style>
