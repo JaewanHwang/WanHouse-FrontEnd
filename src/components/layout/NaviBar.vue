@@ -1,22 +1,29 @@
 <template>
-  <div>
-    <h1>HappyHouse</h1>
-    <router-link :to="{ name: 'home' }" class="link">
-      <button text>home</button>
-    </router-link>
-    <router-link :to="{ name: 'user' }" class="link">
-      <button text>user</button>
-    </router-link>
-    <router-link :to="{ name: 'map' }" class="link">
-      <button text>map</button>
-    </router-link>
-    <router-link :to="{ name: 'board' }" class="link">
-      <button text>board</button>
-    </router-link>
-    <router-link :to="{ name: 'qna' }" class="link">
-      <button text>qna</button>
-    </router-link>
-  </div>
+  <v-container>
+    <v-toolbar flat>
+      <v-toolbar-title> HappyHouse </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-toolbar-items>
+        <router-link :to="{ name: 'home' }" class="link">
+          <v-btn text>home</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'user' }" class="link">
+          <v-btn text>user</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'map' }" class="link">
+          <v-btn text>map</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'board' }" class="link">
+          <v-btn text>board</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'qna' }" class="link">
+          <v-btn text>qna</v-btn>
+        </router-link>
+      </v-toolbar-items>
+    </v-toolbar>
+  </v-container>
 </template>
 
 <script>
