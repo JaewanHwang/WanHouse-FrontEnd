@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "HomeView",
+  name: "MapView",
   props: {
     msg: String,
   },
