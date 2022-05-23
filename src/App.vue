@@ -1,7 +1,9 @@
 <template>
   <div id="app">
-    <navi-bar />
-    <router-view />
+    <v-app>
+      <navi-bar />
+      <router-view />
+    </v-app>
   </div>
 </template>
 
@@ -15,6 +17,6 @@ export default {
   },
 
   data: () => ({}),
-  component: {},
+  // component: {},
 };
 </script>

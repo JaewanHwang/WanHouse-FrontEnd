@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import HomeView from "../views/HomeView.vue";
-
+import HomeView from "@/views/HomeView.vue";
+import MapView from "@/views/MapView.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -18,7 +18,8 @@ const routes = [
   {
     path: "/map",
     name: "map",
-    component: () => import("@/views/MapView.vue"),
+    // component: () => import("@/views/MapView.vue"),
+    component: MapView,
   },
   {
     path: "/board",
