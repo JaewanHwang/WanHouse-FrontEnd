@@ -6,10 +6,21 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items>
-        <v-btn text>home</v-btn>
-        <v-btn text>MAP</v-btn>
-        <v-btn text>BOARD</v-btn>
-        <v-btn text>QnA</v-btn>
+        <router-link :to="{ name: 'home' }" class="link">
+          <v-btn text>home</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'user' }" class="link">
+          <v-btn text>user</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'map' }" class="link">
+          <v-btn text>map</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'board' }" class="link">
+          <v-btn text>board</v-btn>
+        </router-link>
+        <router-link :to="{ name: 'qna' }" class="link">
+          <v-btn text>qna</v-btn>
+        </router-link>
       </v-toolbar-items>
     </v-toolbar>
   </v-container>
@@ -23,4 +34,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+a {
+  text-decoration: none;
+}
+</style>
