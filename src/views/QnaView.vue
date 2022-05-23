@@ -1,5 +1,5 @@
 <template>
-  <h1>홈</h1>
+  <h1>QnA</h1>
 </template>
 
 <script>

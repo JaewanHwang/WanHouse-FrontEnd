@@ -1,5 +1,5 @@
 <template>
-  <h1>홈</h1>
+  <h1>보드</h1>
 </template>
 
 <script>
