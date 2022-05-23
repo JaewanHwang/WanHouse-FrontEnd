@@ -1,13 +1,34 @@
 <template>
   <div>
     <form>
-      <label for="userid">아이디</label>
-      <input type="text" id="userid" ref="userid" v-model="userid" />
-      <button @click.prevent="sendId">중복확인</button>
+      <label for="userId">아이디</label>
+      <input type="text" id="userId" ref="userId" v-model="user.userId" />
       <br />
-      <label for="username">이름</label>
-      <input type="text" id="username" ref="username" v-model="username" />
+      <button @click.prevent="idCheck">중복확인</button>
       <br />
+      <label for="password">password</label>
+      <input type="text" id="password" ref="password" v-model="user.password" />
+      <br />
+      <label for="userName">이름</label>
+      <input type="text" id="userName" ref="userName" v-model="user.userName" />
+      <br />
+      <label for="userAddress">userAddress</label>
+      <input
+        type="text"
+        id="userAddress"
+        ref="userAddress"
+        v-model="user.userAddress"
+      />
+      <br />
+      <label for="userPhoneNumber">userPhoneNumber</label>
+      <input
+        type="text"
+        id="userPhoneNumber"
+        ref="userPhoneNumber"
+        v-model="user.userPhoneNumber"
+      />
+      <br />
+
       <button @click.prevent="checkVal">등록</button>
     </form>
   </div>
@@ -21,19 +42,26 @@ export default {
   },
   data() {
     return {
-      userid: "",
-      username: "",
+      user: [
+        {
+          userId: "",
+          password: "",
+          userName: "",
+          userAddress: "",
+          userPhoneNumber: "",
+        },
+      ],
     };
   },
   methods: {
     checkVal() {
-      if (!this.userid) {
+      if (!this.user.userId) {
         alert("아이디를 입력하세요!!");
-        this.$refs.userid.focus();
+        this.$refs.user.userId.focus();
         return;
-      } else if (!this.username) {
+      } else if (!this.user.userName) {
         alert("이름을 입력하세요!!");
-        this.$refs.username.focus();
+        this.$refs.user.userName.focus();
         return;
       }
       this.register();
@@ -43,11 +71,11 @@ export default {
       alert("서버에 전송했엉~");
     },
 
-    sendId() {
-      if (this.userid == "123") {
+    idCheck() {
+      if (this.user.userId == "123") {
         alert("중복이야~~");
       } else {
-        alert("합격!");
+        alert("중복아니야~!");
       }
       return;
     },
