@@ -13,8 +13,8 @@ const houseStore = {
     houses: [],
     house: null,
     dongs: [],
-    lat: 37.4705695149055,
-    lng: 127.143574460252,
+    lat: 0,
+    lng: 0,
     likedHouses: [],
   },
 
@@ -48,10 +48,18 @@ const houseStore = {
       state.house.likeThisApt = like;
     },
     SET_LIKED_HOUSES: (state, likedHouses) => {
-      if (likedHouses.length > 0) {
-        state.likedHouses = likedHouses;
+      state.likedHouses = likedHouses;
+      if (state.lat == 0 && state.lng == 0) {
         state.lat = likedHouses[0].lat;
         state.lng = likedHouses[0].lng;
+      }
+    },
+    REMOVE_LIKED_HOUSE: (state, aptCode) => {
+      for (let i in state.likedHouses) {
+        if (state.likedHouses[i].aptCode == aptCode) {
+          state.likedHouses.splice(i, 1);
+          console.log("HI");
+        }
       }
     },
   },
@@ -83,8 +91,8 @@ const houseStore = {
         commit("SET_LIKE", true);
       });
     },
-    POST_UNLIKE_THIS_APT: ({ commit, state }) => {
-      postUnlikeThisApt(state.house.houseInfo.aptCode, () => {
+    POST_UNLIKE_THIS_APT: ({ commit }, aptCode) => {
+      postUnlikeThisApt(aptCode, () => {
         commit("SET_LIKE", false);
       });
     },
