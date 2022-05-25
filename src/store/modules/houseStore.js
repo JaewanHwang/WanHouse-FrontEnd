@@ -2,6 +2,8 @@ import {
   getAptsAroundCurrentPosition,
   getDetailedAptInfo,
   getSearchedResult,
+  postLikeThisApt,
+  postUnlikeThisApt,
 } from "@/api/house.js";
 
 const houseStore = {
@@ -40,26 +42,36 @@ const houseStore = {
     SET_DONGS: (state, dongs) => {
       state.dongs = dongs;
     },
+    SET_LIKE: (state, like) => {
+      state.house.likeThisApt = like;
+    },
   },
 
   actions: {
-    FETCH_APTS_AROUND_CURRENT_POSITION: ({ commit, state }) => {
-      return getAptsAroundCurrentPosition(
-        { lat: state.lat, lng: state.lng },
-        ({ data }) => {
-          commit("SET_HOUSES", data.houseList);
-        },
-      );
+    FETCH_APTS_AROUND_CURRENT_POSITION: ({ commit }, params) => {
+      return getAptsAroundCurrentPosition(params, ({ data }) => {
+        commit("SET_HOUSES", data.houseList);
+      });
     },
     FETCH_DETAILED_APT_INFO: ({ commit }, aptCode) => {
       return getDetailedAptInfo(aptCode, ({ data }) => {
         commit("SET_HOUSE", data);
       });
     },
-    FETCH_SEARCHED_RESULT: ({ commit }, keyword) => {
-      getSearchedResult(keyword, ({ data }) => {
+    FETCH_SEARCHED_RESULT: ({ commit }, params) => {
+      getSearchedResult(params, ({ data }) => {
         commit("SET_HOUSES", data.houseList);
         commit("SET_DONGS", data.dongList);
+      });
+    },
+    POST_LIKE_THIS_APT: ({ commit, state }) => {
+      postLikeThisApt(state.house.houseInfo.aptCode, () => {
+        commit("SET_LIKE", true);
+      });
+    },
+    POST_UNLIKE_THIS_APT: ({ commit, state }) => {
+      postUnlikeThisApt(state.house.houseInfo.aptCode, () => {
+        commit("SET_LIKE", false);
       });
     },
   },

@@ -15,8 +15,8 @@
           @keydown.enter="searchByKeyword"
           v-model="keyword"
         ></v-text-field>
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
+        <v-btn icon @click="openFilters">
+          <v-icon>mdi-tune</v-icon>
         </v-btn>
 
         <v-card
@@ -58,47 +58,66 @@
         </v-card>
       </v-toolbar>
     </div>
-    <v-card elevation="10">
+    <v-card elevation="10" v-click-outside="closeFilters" v-if="showFilters">
       <div class="filter_container">
-        <div>
-          <span class="text-h2 font-weight-light text-right"></span>
-          <span class="subheading font-weight-light mr-1">BPM</span>
+        <div class="d-flex justify-space-between filter_header">
+          <div class="text-h7">매매가</div>
+          <div class="subheading font-weight-light mr-1">
+            {{
+              `${dealAmount[0]}억원 ~ ${
+                dealAmount[1] != 16 ? dealAmount[1] + "억원" : "무제한"
+              }`
+            }}
+          </div>
         </div>
         <v-range-slider
-          :value="[0, 1]"
-          min="0"
-          max="3"
-          ticks="always"
-          tick-size="4"
-          track-color="shades"
-          thumb-color="blue darken-3"
-          thumb-label="always"
-        >
-        </v-range-slider>
-        <span class="text-h2 font-weight-light"></span>
-        <span class="subheading font-weight-light mr-1">BPM</span>
-        <v-range-slider
-          :value="[0, 1]"
-          min="0"
-          max="3"
-          ticks="always"
-          tick-size="4"
-          track-color="shades"
-          thumb-color="blue darken-3"
-          thumb-label="always"
-        >
-        </v-range-slider>
-        <span class="text-h2 font-weight-light text-right"></span>
-        <span class="subheading font-weight-light mr-1">BPM</span>
-        <v-range-slider
-          :value="[0, 16]"
+          v-model="dealAmount"
           min="0"
           max="16"
-          tick-size="1"
-          ticks="always"
+          ticks
+          tick-size="3"
           track-color="shades"
-          thumb-color="blue darken-3"
-          thumb-label="always"
+          @end="searchByFilters"
+        >
+        </v-range-slider>
+        <v-divider></v-divider>
+        <div class="d-flex justify-space-between filter_header">
+          <div class="text-h7">사용승인일</div>
+          <div class="subheading font-weight-light mr-1">
+            {{
+              `${buildYear[0]}년 ~ ${
+                buildYear[1] != 31 ? buildYear[1] + "년" : "무제한"
+              }`
+            }}
+          </div>
+        </div>
+        <v-range-slider
+          v-model="buildYear"
+          min="0"
+          max="31"
+          ticks
+          tick-size="3"
+          track-color="shades"
+          @end="searchByFilters"
+        >
+        </v-range-slider>
+        <v-divider></v-divider>
+        <div class="d-flex justify-space-between filter_header">
+          <div class="text-h7">전용면적</div>
+          <div class="subheading font-weight-light mr-1">
+            {{
+              `${area[0]}&#13217; ~ ${
+                area[1] != 151 ? area[1] + "&#13217;" : "무제한"
+              }`
+            }}
+          </div>
+        </div>
+        <v-range-slider
+          v-model="area"
+          min="0"
+          max="151"
+          track-color="shades"
+          @end="searchByFilters"
         >
         </v-range-slider>
       </div>
@@ -129,6 +148,27 @@
                 }}
               </v-card-subtitle>
             </v-card>
+
+            <v-btn
+              icon
+              color="pink"
+              class="like_button"
+              x-large
+              v-if="doILikeThisApt"
+              @click="unlikeThisApt"
+            >
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              color="shades"
+              class="like_button"
+              x-large
+              v-else
+              @click="likeThisApt"
+            >
+              <v-icon>mdi-heart</v-icon>
+            </v-btn>
           </v-col>
 
           <v-col cols="12">
@@ -158,10 +198,14 @@ export default {
       map: null,
       overlays: [],
       showSidePanel: false,
+      showFilters: false,
       selectedDong: null,
       selectedApt: null,
       isSearched: false,
       keyword: "",
+      buildYear: [0, 31],
+      dealAmount: [0, 16],
+      area: [0, 151],
     };
   },
   created() {},
@@ -175,8 +219,37 @@ export default {
   computed: {
     ...mapState("houseStore", ["houses", "house", "lat", "lng", "dongs"]),
     // ...mapGetters("houseStore", ["positions"]),
+    doILikeThisApt() {
+      return this.house.likeThisApt;
+    },
   },
   methods: {
+    likeThisApt() {
+      confirm("이 아파트를 관심아파트에 지정하시겠습니까?");
+      this.POST_LIKE_THIS_APT();
+    },
+    unlikeThisApt() {
+      confirm("이 아파트를 관심아파트에서 삭제하시겠습니까?");
+      this.POST_UNLIKE_THIS_APT();
+    },
+    closeFilters() {
+      this.showFilters = false;
+    },
+    openFilters() {
+      this.showFilters = true;
+    },
+    searchByFilters() {
+      this.fetchAptsAroundCurrentPosition({
+        dealAmountLowerBound: this.dealAmount[0] * 10000,
+        dealAmountUpperBound: this.dealAmount[1] * 10000,
+        buildYearLowerBound: this.buildYear[0],
+        buildYearUpperBound: this.buildYear[1],
+        areaLowerBound: this.area[0],
+        areaUpperBound: this.area[1],
+        lat: this.lat,
+        lng: this.lng,
+      });
+    },
     closeSearchedResult() {
       this.isSearched = false;
     },
@@ -187,10 +260,13 @@ export default {
       const container = document.getElementById("map");
       const options = {
         center: new kakao.maps.LatLng(this.lat, this.lng), //지도의 중심좌표.
-        level: 5, //지도의 레벨(확대, 축소 정도)
+        level: 4, //지도의 레벨(확대, 축소 정도)
       };
       this.map = new kakao.maps.Map(container, options);
-      this.fetchAptsAroundCurrentPosition();
+      this.fetchAptsAroundCurrentPosition({
+        lat: this.lat,
+        lng: this.lng,
+      });
       this.addCenterChangedEventListener();
     },
     addCenterChangedEventListener() {
@@ -199,7 +275,10 @@ export default {
         // 지도 중심좌표를 얻어옵니다
         let latlng = this.map.getCenter();
         this.SET_CURRENT_POSITION(latlng);
-        this.fetchAptsAroundCurrentPosition();
+        this.fetchAptsAroundCurrentPosition({
+          lat: this.lat,
+          lng: this.lng,
+        });
       });
     },
     drawMarkerWithInfoWindow(positionsAndContents) {
@@ -239,9 +318,9 @@ export default {
           this.showSidePanel = true;
         });
     },
-    fetchAptsAroundCurrentPosition() {
+    fetchAptsAroundCurrentPosition(params) {
       this.$store
-        .dispatch("houseStore/FETCH_APTS_AROUND_CURRENT_POSITION")
+        .dispatch("houseStore/FETCH_APTS_AROUND_CURRENT_POSITION", params)
         .then(() => {
           return this.houses.map((house) => {
             var content = `<div class="overlay_info" data-aptcode="${house.aptCode}">`;
@@ -276,11 +355,13 @@ export default {
         this.keyword = "";
       }
       this.isSearched = true;
-      this.FETCH_SEARCHED_RESULT(this.keyword);
+      this.FETCH_SEARCHED_RESULT({ keyword: this.keyword });
     },
     ...mapActions("houseStore", [
       "FETCH_DETAILED_APT_INFO",
       "FETCH_SEARCHED_RESULT",
+      "POST_LIKE_THIS_APT",
+      "POST_UNLIKE_THIS_APT",
     ]),
     ...mapMutations("houseStore", ["SET_CURRENT_POSITION"]),
   },
@@ -291,7 +372,7 @@ export default {
       var center = new kakao.maps.LatLng(go.lat, go.lng);
       this.map.setCenter(center);
       this.SET_CURRENT_POSITION(center);
-      this.fetchAptsAroundCurrentPosition();
+      this.fetchAptsAroundCurrentPosition({ lat: this.lat, lng: this.lng });
       this.showDetailedAptInfo(go.aptCode);
     },
     selectedDong(newSelectedItem) {
@@ -300,7 +381,7 @@ export default {
       var center = new kakao.maps.LatLng(go.lat, go.lng);
       this.map.setCenter(center);
       this.SET_CURRENT_POSITION(center);
-      this.fetchAptsAroundCurrentPosition();
+      this.fetchAptsAroundCurrentPosition({ lat: this.lat, lng: this.lng });
     },
   },
 };
@@ -388,7 +469,7 @@ hr {
 
 .searched-result {
   position: absolute;
-  top: 4.3rem;
+  top: 4.5rem;
   left: 0rem;
   width: 100%;
   z-index: 2;
@@ -399,9 +480,19 @@ hr {
 .filter_container {
   background: #ffffff;
   position: absolute;
-  top: 8.2rem;
+  top: 8.5rem;
   left: 3rem;
   width: 287.4px;
   z-index: 2;
+  padding: 1%;
+}
+.filter_header {
+  margin-bottom: 2rem;
+  margin-top: 0.5rem;
+}
+.like_button {
+  position: absolute;
+  top: 1.5rem;
+  right: 1rem;
 }
 </style>
