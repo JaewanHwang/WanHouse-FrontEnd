@@ -60,8 +60,10 @@
     </div>
     <v-card elevation="10">
       <div class="filter_container">
-        <span class="text-h2 font-weight-light"></span>
-        <span class="subheading font-weight-light mr-1">BPM</span>
+        <div>
+          <span class="text-h2 font-weight-light text-right"></span>
+          <span class="subheading font-weight-light mr-1">BPM</span>
+        </div>
         <v-range-slider
           :value="[0, 1]"
           min="0"
@@ -86,14 +88,14 @@
           thumb-label="always"
         >
         </v-range-slider>
-        <span class="text-h2 font-weight-light"></span>
+        <span class="text-h2 font-weight-light text-right"></span>
         <span class="subheading font-weight-light mr-1">BPM</span>
         <v-range-slider
-          :value="[0, 1]"
+          :value="[0, 16]"
           min="0"
-          max="3"
+          max="16"
+          tick-size="1"
           ticks="always"
-          tick-size="4"
           track-color="shades"
           thumb-color="blue darken-3"
           thumb-label="always"
@@ -397,7 +399,7 @@ hr {
 .filter_container {
   background: #ffffff;
   position: absolute;
-  top: 7.7rem;
+  top: 8.2rem;
   left: 3rem;
   width: 287.4px;
   z-index: 2;
