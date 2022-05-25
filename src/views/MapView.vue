@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%; height: 86.5%; position: relative">
+  <div style="width: 100%; height: 89%; position: relative">
     <v-tabs height="2rem">
       <v-tab>아파트 검색</v-tab>
       <v-tab>관심 아파트</v-tab>

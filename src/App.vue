@@ -2,9 +2,7 @@
   <v-app>
     <v-main>
       <navi-bar id="header" />
-      <v-content>
-        <router-view></router-view>
-      </v-content>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>

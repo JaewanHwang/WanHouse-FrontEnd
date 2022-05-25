@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-toolbar fluid app flat height="50">
+    <v-toolbar fluid flat height="50">
       <router-link :to="{ name: 'home' }" class="link black--text">
         <v-toolbar-title class="text-uppercase">
           <span color="black" class="font-weight-bold">Wan</span>
