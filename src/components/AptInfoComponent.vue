@@ -8,157 +8,105 @@
           <template v-slot:default>
             <tbody>
               <tr>
+                <th class="detail_info_header">준공년도</th>
+                <td class="detail_info">{{ houseInfo.buildYear }}년도</td>
+              </tr>
+              <tr>
                 <th class="detail_info_header">경비관리방식</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo ? house.houseDetailInfo.codeSec : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.codeSec : "-" }}
                 </td>
               </tr>
 
               <tr>
                 <th class="detail_info_header">경비관리인원</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptMgrCnt
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptMgrCnt : "-" }}
                   명
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">청소관리방식</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.codeClean
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.codeClean : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">청소관리인원</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdClcnt
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdClcnt : "-" }}
                   명
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">음식물처리방법</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.codeGarbage
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.codeGarbage : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">승강기대수</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdEcnt
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdEcnt : "-" }}
                   대
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">주차대수(지상)</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdPcnt
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdPcnt : "-" }}
                   대
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">주차대수(지하)</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdPcntu
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdPcntu : "-" }}
                   대
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">CCTV대수</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdCccnt
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdCccnt : "-" }}
                   대
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">부대.복리시설</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.welfareFacility
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.welfareFacility : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">버스정류장 거리</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdWtimebus
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdWtimebus : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">지하철호선</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.subwayLine
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.subwayLine : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">지하철역명</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.subwayStation
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.subwayStation : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">지하철역 거리</th>
                 <td class="detail_info">
-                  {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.kaptdWtimesub
-                      : "-"
-                  }}
+                  {{ houseDetailInfo ? houseDetailInfo.kaptdWtimesub : "-" }}
                 </td>
               </tr>
               <tr>
                 <th class="detail_info_header">편의시설</th>
                 <td class="detail_info">
                   {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.convenientFacility
-                      : "-"
+                    houseDetailInfo ? houseDetailInfo.convenientFacility : "-"
                   }}
                 </td>
               </tr>
@@ -166,9 +114,7 @@
                 <th class="detail_info_header">교육시설</th>
                 <td class="detail_info">
                   {{
-                    house.houseDetailInfo
-                      ? house.houseDetailInfo.educationFacility
-                      : "-"
+                    houseDetailInfo ? houseDetailInfo.educationFacility : "-"
                   }}
                 </td>
               </tr>
@@ -183,7 +129,8 @@
 <script>
 export default {
   props: {
-    house: Object,
+    houseDetailInfo: Object,
+    houseInfo: Object,
   },
 };
 </script>

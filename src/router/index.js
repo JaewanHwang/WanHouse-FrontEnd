@@ -37,6 +37,19 @@ const routes = [
     name: "map",
     // component: () => import("@/views/MapView.vue"),
     component: MapView,
+    redirect: "/map/search",
+    children: [
+      {
+        path: "search",
+        name: "map-search",
+        component: () => import("@/views/MapSearchView.vue"),
+      },
+      {
+        path: "like",
+        name: "map-like",
+        component: () => import("@/views/MapLikeView.vue"),
+      },
+    ],
   },
   {
     path: "/board",
