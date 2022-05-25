@@ -61,7 +61,7 @@
     <v-card elevation="10" v-click-outside="closeFilters" v-if="showFilters">
       <div class="filter_container">
         <div class="d-flex justify-space-between filter_header">
-          <div class="text-h7">매매가</div>
+          <div class="text-h7 font-weight-bold">매매가</div>
           <div class="subheading font-weight-light mr-1">
             {{
               `${dealAmount[0]}억원 ~ ${
@@ -82,7 +82,7 @@
         </v-range-slider>
         <v-divider></v-divider>
         <div class="d-flex justify-space-between filter_header">
-          <div class="text-h7">사용승인일</div>
+          <div class="text-h7 font-weight-bold">사용승인일</div>
           <div class="subheading font-weight-light mr-1">
             {{
               `${buildYear[0]}년 ~ ${
@@ -103,7 +103,7 @@
         </v-range-slider>
         <v-divider></v-divider>
         <div class="d-flex justify-space-between filter_header">
-          <div class="text-h7">전용면적</div>
+          <div class="text-h7 font-weight-bold">전용면적</div>
           <div class="subheading font-weight-light mr-1">
             {{
               `${area[0]}&#13217; ~ ${
@@ -151,7 +151,7 @@
 
             <v-btn
               icon
-              color="pink"
+              color="yellow"
               class="like_button"
               x-large
               v-if="doILikeThisApt"
@@ -263,11 +263,14 @@ export default {
         level: 4, //지도의 레벨(확대, 축소 정도)
       };
       this.map = new kakao.maps.Map(container, options);
-      this.fetchAptsAroundCurrentPosition({
-        lat: this.lat,
-        lng: this.lng,
+      this.$store.dispatch("houseStore/FETCH_LIKED_HOUSES").then(() => {
+        this.map.setCenter(new kakao.maps.LatLng(this.lat, this.lng));
+        this.fetchAptsAroundCurrentPosition({
+          lat: this.lat,
+          lng: this.lng,
+        });
+        this.addCenterChangedEventListener();
       });
-      this.addCenterChangedEventListener();
     },
     addCenterChangedEventListener() {
       // 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
@@ -423,6 +426,7 @@ hr {
   padding: 5px 5px 5px 5px;
   font-size: 14px;
   text-align: center;
+  font-weight: bolder;
   border-radius: 6px 6px 0 0;
 }
 .overlay_info:nth-of-type(n) {
@@ -431,11 +435,12 @@ hr {
 }
 .overlay_info .overlay_info_title {
   display: block;
-  background: skyblue;
+  background: blue;
   text-decoration: none;
   color: #fff;
   padding: 5px 5px 5px 5px;
   font-size: 14px;
+  font-weight: bolder;
   text-align: center;
   border-radius: 6px 6px 0 0;
 }

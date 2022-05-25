@@ -16,7 +16,7 @@
           :height="height"
         ></line-chart>
         <v-divider id="section_divider"></v-divider>
-        <v-simple-table fixed-header height="15rem">
+        <v-simple-table fixed-header height="13rem">
           <template v-slot:default>
             <thead>
               <tr id="table_header">
@@ -82,7 +82,7 @@ export default {
     },
     height: {
       type: Number,
-      default: 160,
+      default: 200,
     },
     cssClasses: {
       default: "",

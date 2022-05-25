@@ -4,6 +4,7 @@ import {
   getSearchedResult,
   postLikeThisApt,
   postUnlikeThisApt,
+  getLikedHouses,
 } from "@/api/house.js";
 
 const houseStore = {
@@ -14,6 +15,7 @@ const houseStore = {
     dongs: [],
     lat: 37.4705695149055,
     lng: 127.143574460252,
+    likedHouses: [],
   },
 
   getters: {
@@ -45,12 +47,24 @@ const houseStore = {
     SET_LIKE: (state, like) => {
       state.house.likeThisApt = like;
     },
+    SET_LIKED_HOUSES: (state, likedHouses) => {
+      if (likedHouses.length > 0) {
+        state.likedHouses = likedHouses;
+        state.lat = likedHouses[0].lat;
+        state.lng = likedHouses[0].lng;
+      }
+    },
   },
 
   actions: {
     FETCH_APTS_AROUND_CURRENT_POSITION: ({ commit }, params) => {
       return getAptsAroundCurrentPosition(params, ({ data }) => {
         commit("SET_HOUSES", data.houseList);
+      });
+    },
+    FETCH_LIKED_HOUSES: ({ commit }) => {
+      return getLikedHouses(({ data }) => {
+        commit("SET_LIKED_HOUSES", data);
       });
     },
     FETCH_DETAILED_APT_INFO: ({ commit }, aptCode) => {

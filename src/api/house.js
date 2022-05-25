@@ -59,10 +59,22 @@ function postUnlikeThisApt(aptCode, success, fail) {
     .catch(fail);
 }
 
+function getLikedHouses(success, fail) {
+  return api
+    .get(`http://localhost:8080/houses/likes`, {
+      headers: {
+        "access-token": sessionStorage.getItem("access-token"),
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
 export {
   getAptsAroundCurrentPosition,
   getDetailedAptInfo,
   getSearchedResult,
   postLikeThisApt,
   postUnlikeThisApt,
+  getLikedHouses,
 };
