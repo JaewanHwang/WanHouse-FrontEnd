@@ -1,35 +1,168 @@
 <template>
-  <div style="width: 100%; height: 95%; position: relative">
-    <v-tabs>
+  <div style="width: 100%; height: 86.5%; position: relative">
+    <v-tabs height="2rem">
       <v-tab>아파트 검색</v-tab>
       <v-tab>관심 아파트</v-tab>
     </v-tabs>
+
     <div id="search-container">
-      <v-toolbar dense floating elevation="10">
+      <v-toolbar floating elevation="5">
         <v-text-field
           hide-details
           prepend-icon="mdi-magnify"
-          filled
           label="법정동 혹은 아파트"
           clearable
+          @keydown.enter="searchByKeyword"
+          v-model="keyword"
         ></v-text-field>
-
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
+
+        <v-card
+          class="mx-auto searched-result"
+          tile
+          v-if="isSearched"
+          width="300"
+          v-click-outside="closeSearchedResult"
+        >
+          <v-list class="overflow-y-auto" max-height="20rem" dense>
+            <v-list-item-group v-model="selectedDong" color="primary">
+              <v-subheader><strong>지역</strong></v-subheader>
+              <v-list-item
+                v-for="item in dongs"
+                :key="item.dongCode"
+                :value="item.dongCode"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.fullName }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+            <v-list-item-group v-model="selectedApt" color="primary">
+              <v-subheader><strong>아파트</strong></v-subheader>
+              <v-list-item
+                v-for="item in houses"
+                :key="item.aptCode"
+                :value="item.aptCode"
+              >
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.aptName }}</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    [item.sidoName, item.gugunName, item.dongName].join(" ")
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card>
       </v-toolbar>
     </div>
-
+    <v-card elevation="10">
+      <div class="filter_container">
+        <span class="text-h2 font-weight-light"></span>
+        <span class="subheading font-weight-light mr-1">BPM</span>
+        <v-range-slider
+          :value="[0, 1]"
+          min="0"
+          max="3"
+          ticks="always"
+          tick-size="4"
+          track-color="shades"
+          thumb-color="blue darken-3"
+          thumb-label="always"
+        >
+        </v-range-slider>
+        <span class="text-h2 font-weight-light"></span>
+        <span class="subheading font-weight-light mr-1">BPM</span>
+        <v-range-slider
+          :value="[0, 1]"
+          min="0"
+          max="3"
+          ticks="always"
+          tick-size="4"
+          track-color="shades"
+          thumb-color="blue darken-3"
+          thumb-label="always"
+        >
+        </v-range-slider>
+        <span class="text-h2 font-weight-light"></span>
+        <span class="subheading font-weight-light mr-1">BPM</span>
+        <v-range-slider
+          :value="[0, 1]"
+          min="0"
+          max="3"
+          ticks="always"
+          tick-size="4"
+          track-color="shades"
+          thumb-color="blue darken-3"
+          thumb-label="always"
+        >
+        </v-range-slider>
+      </div>
+    </v-card>
     <div id="map" style="width: 100%; height: 100%"></div>
+    <v-card
+      max-width="400"
+      class="mx-auto"
+      id="right_side_bar"
+      height="100%"
+      v-click-outside="closeSidePanel"
+    >
+      <v-container v-if="showSidePanel">
+        <v-row dense>
+          <v-col cols="12">
+            <v-card color="#ff4500" dark>
+              <v-card-title class="text-h6">{{
+                house.houseInfo.aptName
+              }}</v-card-title>
+              <v-card-subtitle
+                >{{
+                  [
+                    house.houseInfo.sidoName,
+                    house.houseInfo.gugunName,
+                    house.houseInfo.dongName,
+                    house.houseInfo.jibun,
+                  ].join(" ")
+                }}
+              </v-card-subtitle>
+            </v-card>
+          </v-col>
+
+          <v-col cols="12">
+            <apt-price-component :house="house"></apt-price-component>
+          </v-col>
+          <v-col cols="12">
+            <apt-info-component :house="house"></apt-info-component>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
   </div>
 </template>
 <script>
+import { mapMutations, mapState, mapActions } from "vuex";
+import AptInfoComponent from "@/components/AptInfoComponent.vue";
+import AptPriceComponent from "@/components/AptPriceComponent.vue";
 export default {
   name: "MapView",
   props: {},
-  data() {
-    return { map: null };
+  components: {
+    AptInfoComponent,
+    AptPriceComponent,
   },
+  data() {
+    return {
+      map: null,
+      overlays: [],
+      showSidePanel: false,
+      selectedDong: null,
+      selectedApt: null,
+      isSearched: false,
+      keyword: "",
+    };
+  },
+  created() {},
   mounted() {
     const script = document.createElement("script");
     /* global kakao */
@@ -37,23 +170,236 @@ export default {
     script.src = `http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${process.env.VUE_APP_KAKAO_MAP_API_KEY}`;
     document.head.appendChild(script);
   },
+  computed: {
+    ...mapState("houseStore", ["houses", "house", "lat", "lng", "dongs"]),
+    // ...mapGetters("houseStore", ["positions"]),
+  },
   methods: {
+    closeSearchedResult() {
+      this.isSearched = false;
+    },
+    closeSidePanel() {
+      this.showSidePanel = false;
+    },
     initMap() {
       const container = document.getElementById("map");
       const options = {
-        center: new kakao.maps.LatLng(37.5139848, 127.0565207), //지도의 중심좌표.
+        center: new kakao.maps.LatLng(this.lat, this.lng), //지도의 중심좌표.
         level: 5, //지도의 레벨(확대, 축소 정도)
       };
       this.map = new kakao.maps.Map(container, options);
+      this.fetchAptsAroundCurrentPosition();
+      this.addCenterChangedEventListener();
+    },
+    addCenterChangedEventListener() {
+      // 마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
+      kakao.maps.event.addListener(this.map, "dragend", () => {
+        // 지도 중심좌표를 얻어옵니다
+        let latlng = this.map.getCenter();
+        this.SET_CURRENT_POSITION(latlng);
+        this.fetchAptsAroundCurrentPosition();
+      });
+    },
+    drawMarkerWithInfoWindow(positionsAndContents) {
+      for (let overlay of this.overlays) {
+        overlay.setMap(null);
+      }
+      this.overlays = [];
+      for (let positionAndContent of positionsAndContents) {
+        // 커스텀 오버레이를 생성합니다
+        var mapCustomOverlay = new kakao.maps.CustomOverlay({
+          position: positionAndContent.position,
+          content: positionAndContent.content,
+          xAnchor: 0.5, // 커스텀 오버레이의 x축 위치입니다. 1에 가까울수록 왼쪽에 위치합니다. 기본값은 0.5 입니다
+          yAnchor: 1.1, // 커스텀 오버레이의 y축 위치입니다. 1에 가까울수록 위쪽에 위치합니다. 기본값은 0.5 입니다
+        });
+        this.overlays.push(mapCustomOverlay);
+        mapCustomOverlay.setMap(this.map);
+      }
+      document.querySelectorAll(".overlay_info").forEach((overlay) => {
+        overlay.addEventListener("click", (event) => {
+          document
+            .querySelectorAll(".overlay_info_title_focused")
+            .forEach((element) => {
+              element.className = "overlay_info_title";
+            });
+          event.target.closest(".overlay_info").children[0].className =
+            "overlay_info_title_focused";
+          this.showDetailedAptInfo(overlay.dataset.aptcode);
+        });
+      });
+    },
+    showDetailedAptInfo(aptCode) {
+      this.showSidePanel = false;
+      this.$store
+        .dispatch("houseStore/FETCH_DETAILED_APT_INFO", aptCode)
+        .then(() => {
+          this.showSidePanel = true;
+        });
+    },
+    fetchAptsAroundCurrentPosition() {
+      this.$store
+        .dispatch("houseStore/FETCH_APTS_AROUND_CURRENT_POSITION")
+        .then(() => {
+          return this.houses.map((house) => {
+            var content = `<div class="overlay_info" data-aptcode="${house.aptCode}">`;
+            if (
+              house.aptCode == this.selectedApt ||
+              (this.house != null &&
+                this.house.houseInfo.aptCode == house.aptCode)
+            ) {
+              content += `    <span class="overlay_info_title_focused">${house.aptName}</span>`;
+            } else {
+              content += `    <span class="overlay_info_title">${house.aptName}</span>`;
+            }
+            content += '    <div class="desc">';
+            content += `        <span class="address">매매 <strong>${(
+              house.minPrice / 10000
+            ).toFixed(1)}억 ~ ${(house.maxPrice / 10000).toFixed(1)}억</span>`;
+            content += "    </div>";
+            content += "</div>";
+            return {
+              content: content,
+              aptCode: house.aptCode,
+              position: new window.kakao.maps.LatLng(house.lat, house.lng),
+            };
+          });
+        })
+        .then((positionsAndContents) => {
+          this.drawMarkerWithInfoWindow(positionsAndContents);
+        });
+    },
+    searchByKeyword() {
+      if (this.keyword === null) {
+        this.keyword = "";
+      }
+      this.isSearched = true;
+      this.FETCH_SEARCHED_RESULT(this.keyword);
+    },
+    ...mapActions("houseStore", [
+      "FETCH_DETAILED_APT_INFO",
+      "FETCH_SEARCHED_RESULT",
+    ]),
+    ...mapMutations("houseStore", ["SET_CURRENT_POSITION"]),
+  },
+  watch: {
+    selectedApt(newSelectedItem) {
+      if (newSelectedItem === undefined) return;
+      let go = this.houses.find((house) => house.aptCode == newSelectedItem);
+      var center = new kakao.maps.LatLng(go.lat, go.lng);
+      this.map.setCenter(center);
+      this.SET_CURRENT_POSITION(center);
+      this.fetchAptsAroundCurrentPosition();
+      this.showDetailedAptInfo(go.aptCode);
+    },
+    selectedDong(newSelectedItem) {
+      if (newSelectedItem === undefined) return;
+      let go = this.dongs.find((dong) => dong.dongCode == newSelectedItem);
+      var center = new kakao.maps.LatLng(go.lat, go.lng);
+      this.map.setCenter(center);
+      this.SET_CURRENT_POSITION(center);
+      this.fetchAptsAroundCurrentPosition();
     },
   },
 };
 </script>
-<style scoped>
+<style>
+#right_side_bar {
+  position: absolute;
+  top: 2rem;
+  right: 0rem;
+  z-index: 2;
+}
+hr {
+  margin-top: 0.2rem !important;
+  margin-bottom: 0rem !important;
+  border-width: 0.1rem !important;
+}
 #search-container {
   position: absolute;
   top: 6rem;
   left: 3rem;
+  z-index: 2;
+  width: 300px;
+}
+.overlay_info {
+  text-align: center;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  float: left;
+  position: relative;
+  border: 1px solid #ccc;
+  border-bottom: 2px solid #ddd;
+  background-color: #fff;
+}
+.overlay_info .overlay_info_title_focused {
+  display: block;
+  background: orangered;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 5px 5px 5px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px 6px 0 0;
+}
+.overlay_info:nth-of-type(n) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.overlay_info .overlay_info_title {
+  display: block;
+  background: skyblue;
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 5px 5px 5px;
+  font-size: 14px;
+  text-align: center;
+  border-radius: 6px 6px 0 0;
+}
+.overlay_info .desc {
+  padding: 5px;
+  position: relative;
+  min-width: 160px;
+  min-height: 30px;
+}
+.overlay_info .address {
+  font-size: 14px;
+  color: #333;
+  white-space: normal;
+}
+.overlay_info:after {
+  content: "";
+  position: absolute;
+  margin-left: -11px;
+  left: 50%;
+  bottom: -12px;
+  width: 22px;
+  height: 12px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png)
+    no-repeat 0 bottom;
+}
+.side_panel_title {
+  margin-left: 0.5rem;
+  padding-top: 0.5rem;
+  font-weight: bold;
+}
+
+.searched-result {
+  position: absolute;
+  top: 4.3rem;
+  left: 0rem;
+  width: 100%;
+  z-index: 2;
+}
+.v-toolbar__content {
+  padding-bottom: 0;
+}
+.filter_container {
+  background: #ffffff;
+  position: absolute;
+  top: 7.7rem;
+  left: 3rem;
+  width: 287.4px;
   z-index: 2;
 }
 </style>
