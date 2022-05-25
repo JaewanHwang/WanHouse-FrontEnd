@@ -25,12 +25,10 @@ function getDetailedAptInfo(aptCode, success, fail) {
     .catch(fail);
 }
 
-function getSearchedResult(keyword, success, fail) {
+function getSearchedResult(params, success, fail) {
   return api
     .get(`/houses/apts`, {
-      params: {
-        keyword,
-      },
+      params: params,
       headers: {
         "access-token": sessionStorage.getItem("access-token"),
       },
@@ -39,4 +37,44 @@ function getSearchedResult(keyword, success, fail) {
     .catch(fail);
 }
 
-export { getAptsAroundCurrentPosition, getDetailedAptInfo, getSearchedResult };
+function postLikeThisApt(aptCode, success, fail) {
+  return api
+    .post(`http://localhost:8080/houses/like/${aptCode}`, null, {
+      headers: {
+        "access-token": sessionStorage.getItem("access-token"),
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+function postUnlikeThisApt(aptCode, success, fail) {
+  return api
+    .delete(`http://localhost:8080/houses/unlike/${aptCode}`, {
+      headers: {
+        "access-token": sessionStorage.getItem("access-token"),
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+function getLikedHouses(success, fail) {
+  return api
+    .get(`http://localhost:8080/houses/likes`, {
+      headers: {
+        "access-token": sessionStorage.getItem("access-token"),
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+export {
+  getAptsAroundCurrentPosition,
+  getDetailedAptInfo,
+  getSearchedResult,
+  postLikeThisApt,
+  postUnlikeThisApt,
+  getLikedHouses,
+};
