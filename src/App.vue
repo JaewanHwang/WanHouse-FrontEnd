@@ -1,8 +1,10 @@
 <template>
   <v-app>
     <v-main>
-      <navi-bar />
-      <router-view />
+      <navi-bar id="header" />
+      <v-content>
+        <router-view></router-view>
+      </v-content>
     </v-main>
   </v-app>
 </template>
@@ -19,4 +21,9 @@ export default {
   }),
 };
 </script>
-<style></style>
+<style>
+#header {
+  border-color: #0066cc;
+  border-bottom-style: solid;
+}
+</style>
