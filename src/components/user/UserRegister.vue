@@ -69,7 +69,7 @@
                 block
                 dark
                 class="font-weight-bold mb-3"
-                @click.prevent="moveLogin"
+                @click="moveLogin"
               >
                 로그인하기
               </v-btn>

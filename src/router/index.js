@@ -14,7 +14,6 @@ const routes = [
     path: "/user",
     name: "user",
     component: () => import("@/views/UserView.vue"),
-    redirect: "/user/signin",
     children: [
       {
         path: "signin",
@@ -25,6 +24,11 @@ const routes = [
         path: "singup",
         name: "signUp",
         component: () => import("@/components/user/UserRegister.vue"),
+      },
+      {
+        path: "mypage",
+        name: "myPage",
+        component: () => import("@/components/user/UserMyPage.vue"),
       },
     ],
   },

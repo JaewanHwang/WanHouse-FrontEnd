@@ -39,7 +39,7 @@
                 block
                 dark
                 class="font-weight-bold mb-3"
-                @click.prevent="moveRegister()"
+                @click="moveRegister"
                 >회원가입</v-btn
               >
             </form>
@@ -72,8 +72,10 @@ export default {
     ...mapActions(userStore, ["userLogin", "getUserInfo"]),
     async confirm() {
       await this.userLogin(this.user);
-      alert(`로그인 완료\n아이디: ${this.user.userId}`);
-      this.$router.push({ name: "home" });
+      if (this.isLogin) {
+        await this.getUserInfo(this.user.userId);
+        this.$router.push({ name: "home" });
+      }
     },
     moveRegister() {
       this.$router.push({ name: "signUp" });
