@@ -16,16 +16,13 @@
       <router-link :to="{ name: 'board' }" class="link">
         <v-btn class="font-weight-bold" text>board</v-btn>
       </router-link>
-      <router-link :to="{ name: 'qna' }" class="link">
-        <v-btn class="font-weight-bold" text>qna</v-btn>
-      </router-link>
-      <router-link :to="{ name: 'signIn' }" class="link">
-        <v-btn class="font-weight-bold" text>Login</v-btn>
-      </router-link>
-      <router-link :to="{ name: 'signUp' }" class="link">
+      <router-link :to="{ name: 'signUp' }" class="link" v-if="!userInfo">
         <v-btn class="font-weight-bold" text>SignUp</v-btn>
       </router-link>
-      <div class="text-center">
+      <router-link :to="{ name: 'signIn' }" class="link" v-if="!userInfo">
+        <v-btn class="font-weight-bold" text>Login</v-btn>
+      </router-link>
+      <div class="text-center" v-if="userInfo">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" dark v-bind="attrs" v-on="on"> user </v-btn>
@@ -64,7 +61,7 @@ export default {
   name: "HeaderNaviBar",
 
   computed: {
-    ...mapState(userStore, ["isLogin"]),
+    ...mapState(userStore, ["isLogin", "userInfo"]),
   },
 
   methods: {
@@ -73,6 +70,7 @@ export default {
       this.SET_IS_LOGIN(false);
       this.SET_USER_INFO(null);
       sessionStorage.removeItem("access-token");
+      alert("로그아웃 되었습니다.");
     },
   },
 };

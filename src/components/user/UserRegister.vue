@@ -4,8 +4,8 @@
       <v-flex xs12>
         <v-card>
           <div class="pa-5">
-            <h3 style="text-align: center" class="m-8">Register</h3>
-            <form>
+            <h3 style="text-align: center" class="mb-8">Register</h3>
+            <v-form ref="form">
               <v-text-field
                 label="ID"
                 class="font-weight-bold"
@@ -14,7 +14,9 @@
                 ref="userId"
                 v-model="user.userId"
               ></v-text-field>
-              <button @click.prevent="idCheck">중복확인</button>
+              <!-- :rules="register" -->
+              <!-- 위에 v-text-field에 아래 조건 추가하기 -->
+              <!-- :rules="idRules" -->
 
               <v-text-field
                 label="PASSWORD"
@@ -26,7 +28,7 @@
               ></v-text-field>
 
               <v-text-field
-                label="ID"
+                label="NAME"
                 class="font-weight-bold"
                 type="text"
                 id="userName"
@@ -35,7 +37,7 @@
               ></v-text-field>
 
               <v-text-field
-                label="ID"
+                label="ADDRESS"
                 class="font-weight-bold"
                 type="text"
                 id="userAddress"
@@ -44,7 +46,7 @@
               ></v-text-field>
 
               <v-text-field
-                label="ID"
+                label="PHONE NUMBER"
                 class="font-weight-bold"
                 type="text"
                 id="userPhoneNumber"
@@ -59,9 +61,9 @@
                 block
                 dark
                 class="mb-3"
-                @click.prevent="checkVal"
+                @click.prevent="checkValidateRegister"
               >
-                등록하기
+                등록
               </v-btn>
               <v-btn
                 depressed
@@ -71,9 +73,9 @@
                 class="font-weight-bold mb-3"
                 @click="moveLogin"
               >
-                로그인하기
+                로그인
               </v-btn>
-            </form>
+            </v-form>
           </div>
         </v-card>
       </v-flex>
@@ -82,7 +84,8 @@
 </template>
 
 <script>
-import { signUp } from "@/api/user";
+import { userRegister } from "@/api/user";
+// import { checkDuplUserId } from "@/api/user";
 
 export default {
   name: "UserRegister",
@@ -99,47 +102,59 @@ export default {
   },
 
   methods: {
-    checkVal() {
-      if (!this.user.userId) {
-        alert("아이디를 입력하세요!!");
-        this.$refs.user.userId.focus();
-        return;
-      } else if (!this.user.userName) {
-        alert("이름을 입력하세요!!");
-        this.$refs.user.userName.focus();
+    checkValidateRegister() {
+      if (
+        !this.user.userId ||
+        !this.user.password ||
+        !this.user.userName ||
+        !this.user.userAddress ||
+        !this.user.userPhoneNumber
+      ) {
+        alert("필드를 입력해 주세요.");
         return;
       }
       this.register();
     },
-
-    register() {
-      signUp(
-        {
-          userId: this.user.userId,
-          password: this.user.password,
-          userName: this.user.userName,
-          userAddress: this.user.userAddress,
-          userPhoneNumber: this.user.userPhoneNumber,
+    async register() {
+      await userRegister(
+        this.user,
+        () => {
+          alert(`회원가입 성공\n 아이디: ${this.user.userId}`);
+          this.$router.push({ name: "signIn" });
         },
-        (res) => {
-          console.log(res);
-          alert("회원가입 성공!");
-        },
-        (error) => {
-          console.log("에러", error);
-          this.moveLogin();
+        (err) => {
+          if (err.response.status === 409) {
+            alert("아이디가 중복입니다.\n다른 아이디를 입력해 주세요.");
+            return;
+          }
         },
       );
     },
 
-    idCheck() {
-      if (this.user.userId == "123") {
-        alert("중복이야~~");
-      } else {
-        alert("중복아니야~!");
-      }
-      return;
-    },
+    // TODO: ID 중복 체크 룰 추가하기
+    // idRules() {
+    //   const rules = [];
+    //   const rule1 = (v) => !!v || "Password is required";
+    //   rules.push(rule1);
+    //   checkDuplUserId(
+    //     this.user.userId,
+    //     (response) => {
+    //       console.log(response);
+    //     },
+    //     (error) => {
+    //       // 404 면 아이디 중복 없다
+    //       // 409 면 아이디 중복 있다
+    //       // console.log(error.response.status);
+    //       if (error.response.status == 409) {
+    //         console.log("중복임");
+    //         rules.push("ID 중복");
+    //       }
+    //     },
+    //   );
+    //   console.log(rules);
+    //   return rules;
+    // },
+
     moveLogin() {
       this.$router.push({ name: "signIn" });
     },

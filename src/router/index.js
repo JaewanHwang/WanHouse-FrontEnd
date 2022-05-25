@@ -30,6 +30,11 @@ const routes = [
         name: "myPage",
         component: () => import("@/components/user/UserMyPage.vue"),
       },
+      {
+        path: "edit",
+        name: "edit",
+        component: () => import("@/components/user/UserEdit.vue"),
+      },
     ],
   },
   {

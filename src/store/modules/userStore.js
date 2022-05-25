@@ -1,4 +1,4 @@
-import { findById, login } from "@/api/user.js";
+import { getUserInfoById, login } from "@/api/user.js";
 
 const userStore = {
   namespaced: true,
@@ -40,7 +40,7 @@ const userStore = {
       );
     },
     getUserInfo({ commit }, userId) {
-      findById(
+      getUserInfoById(
         userId,
         (response) => {
           commit("SET_USER_INFO", response.data);
