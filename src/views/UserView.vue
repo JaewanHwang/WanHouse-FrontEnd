@@ -42,15 +42,13 @@ export default {
   },
   data() {
     return {
-      user: [
-        {
-          userId: "",
-          password: "",
-          userName: "",
-          userAddress: "",
-          userPhoneNumber: "",
-        },
-      ],
+      user: {
+        userId: "",
+        password: "",
+        userName: "",
+        userAddress: "",
+        userPhoneNumber: "",
+      },
     };
   },
   methods: {

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-toolbar flat>
       <v-toolbar-title> HappyHouse </v-toolbar-title>
 
