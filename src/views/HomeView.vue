@@ -1,10 +1,7 @@
 <template>
   <v-container>
     <section class="hero">
-      <div class="hero-text container">
-        <v-text> </v-text>
-        <hr />
-      </div>
+      <div class="hero-text container"></div>
     </section>
   </v-container>
 </template>

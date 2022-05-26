@@ -1,12 +1,12 @@
 <template>
-  <h1>보드</h1>
+  <v-container>
+    <h2 style="text-align: center" class="ma-3">Board</h2>
+    <router-view></router-view>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: "BoardView",
-  props: {
-    msg: String,
-  },
 };
 </script>

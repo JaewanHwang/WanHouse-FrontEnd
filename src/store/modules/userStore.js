@@ -40,16 +40,9 @@ const userStore = {
       );
     },
     getUserInfo({ commit }, userId) {
-      getUserInfoById(
-        userId,
-        (response) => {
-          commit("SET_USER_INFO", response.data);
-          console.log(response);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+      getUserInfoById(userId, (response) => {
+        commit("SET_USER_INFO", response.data);
+      });
     },
   },
 };

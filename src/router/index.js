@@ -60,11 +60,29 @@ const routes = [
     path: "/board",
     name: "board",
     component: () => import("@/views/BoardView.vue"),
-  },
-  {
-    path: "/qna",
-    name: "qna",
-    component: () => import("@/views/QnaView.vue"),
+    redirect: "/board/list",
+    children: [
+      {
+        path: "list",
+        name: "boardList",
+        component: () => import("@/components/board/BoardList.vue"),
+      },
+      {
+        path: "write",
+        name: "boardRegister",
+        component: () => import("@/components/board/BoardRegister.vue"),
+      },
+      {
+        path: "detail/:articleno",
+        name: "boardDetail",
+        component: () => import("@/components/board/BoardDetail.vue"),
+      },
+      {
+        path: "modify/:articleno",
+        name: "boardModify",
+        component: () => import("@/components/board/BoardModify.vue"),
+      },
+    ],
   },
 ];
 
