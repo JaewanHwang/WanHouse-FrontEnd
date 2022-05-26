@@ -39,7 +39,7 @@ async function checkDuplUserId(userId, response, error) {
 
 async function deleteUserById(userId, response, error) {
   api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
-  await api.post(`users/${userId}`).then(response).catch(error);
+  await api.delete(`users/${userId}`).then(response).catch(error);
 }
 
 async function modifyUserById(userId, user, response, error) {
