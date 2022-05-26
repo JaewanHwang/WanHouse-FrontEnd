@@ -88,7 +88,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from "vuex";
-// import { deleteUserById } from "@/api/user";
+import { modifyUserById, getUserInfoById } from "@/api/user";
 
 const userStore = "userStore";
 
@@ -105,6 +105,10 @@ export default {
       },
     };
   },
+  created() {
+    this.user = this.userInfo;
+  },
+
   computed: {
     ...mapState(userStore, ["userInfo"]),
   },
@@ -119,6 +123,13 @@ export default {
       let isEdit = confirm("정말로 수정하시겠습니까?\n");
       if (isEdit) {
         // TODO: 수정 로직 짜기
+        modifyUserById(this.user.userId, this.user)
+          .then(
+            getUserInfoById(this.user.userId, (res) => {
+              this.$store.state.userInfo = res.data;
+            }),
+          )
+          .catch();
         this.$router.push({ name: "main" });
         return;
       }

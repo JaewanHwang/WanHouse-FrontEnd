@@ -110,6 +110,7 @@ export default {
         "정말로 탈퇴하시겠습니까?\n해당 계정은 즉시 삭제됩니다.",
       );
       if (isdelete) {
+        // TODO: 탈퇴 api 불러오기
         alert("계정이 삭제되었습니다.");
       }
       return;
