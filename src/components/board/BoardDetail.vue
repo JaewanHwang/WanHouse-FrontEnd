@@ -1,32 +1,23 @@
 <template>
   <b-container class="bv-example-row mt-3">
-    <b-row>
-      <b-col>
-        <b-alert show><h3>글보기</h3></b-alert>
-      </b-col>
-    </b-row>
     <b-row class="mb-1">
       <b-col class="text-left">
-        <b-button variant="outline-primary" @click="listArticle">목록</b-button>
+        <v-btn color="primary" @click="listBoard">목록</v-btn>
       </b-col>
       <b-col class="text-right">
-        <b-button
-          variant="outline-info"
-          size="sm"
-          @click="moveModifyArticle"
-          class="mr-2"
-          >글수정</b-button
+        <v-btn color="primary" size="sm" @click="moveModifyBoard" class="mr-2"
+          >글수정</v-btn
         >
-        <b-button variant="outline-danger" size="sm" @click="deleteArticle"
-          >글삭제</b-button
-        >
+        <v-btn dark size="sm" @click="deleteBoard">글삭제</v-btn>
       </b-col>
     </b-row>
     <b-row class="mb-1">
       <b-col>
         <b-card
-          :header-html="`<h3>${article.articleno}.
-          ${article.subject} [${article.hit}]</h3><div><h6>${article.userid}</div><div>${article.regtime}</h6></div>`"
+          :header-html="`<h3>${board.boardNo}.
+          ${board.title} [${board.hit}]</h3><div><h6>${
+            board.userId
+          }</div><div>${board.lastModified || dateFormat}</h6></div>`"
           class="mb-2"
           border-variant="dark"
           no-body
@@ -41,28 +32,28 @@
 </template>
 
 <script>
-// import moment from "moment";
-import { getArticle, deleteArticle } from "@/api/board";
+import moment from "moment";
+import { getBoard, deleteBoard } from "@/api/board";
 
 export default {
   name: "BoardDetail",
   data() {
     return {
-      article: {},
+      board: {},
     };
   },
   computed: {
     message() {
-      if (this.article.content)
-        return this.article.content.split("\n").join("<br>");
+      if (this.board.content)
+        return this.board.content.split("\n").join("<br>");
       return "";
     },
   },
   created() {
-    getArticle(
-      this.$route.params.articleno,
+    getBoard(
+      this.$route.params.boardNo,
       (response) => {
-        this.article = response.data;
+        this.board = response.data;
       },
       (error) => {
         console.log("삭제시 에러발생!!", error);
@@ -70,29 +61,29 @@ export default {
     );
   },
   methods: {
-    listArticle() {
+    listBoard() {
       this.$router.push({ name: "boardList" });
     },
-    moveModifyArticle() {
+    moveModifyBoard() {
       this.$router.replace({
         name: "boardModify",
-        params: { articleno: this.article.articleno },
+        params: { boardNo: this.board.boardNo },
       });
-      //   this.$router.push({ path: `/board/modify/${this.article.articleno}` });
+      //   this.$router.push({ path: `/board/modify/${this.board.boardNo}` });
     },
-    deleteArticle() {
+    deleteBoard() {
       if (confirm("정말로 삭제?")) {
-        deleteArticle(this.article.articleno, () => {
+        deleteBoard(this.board.boardNo, () => {
           this.$router.push({ name: "boardList" });
         });
       }
     },
   },
-  // filters: {
-  //   dateFormat(regtime) {
-  //     return moment(new Date(regtime)).format("YY.MM.DD hh:mm:ss");
-  //   },
-  // },
+  filters: {
+    dateFormat(regtime) {
+      return moment(new Date(regtime)).format("YY.MM.DD hh:mm:ss");
+    },
+  },
 };
 </script>
 

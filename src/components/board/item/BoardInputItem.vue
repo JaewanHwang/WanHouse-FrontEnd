@@ -11,7 +11,7 @@
           <b-form-input
             id="userId"
             disabled
-            v-model="article.userId"
+            v-model="board.userId"
             type="text"
             required
             placeholder="작성자 입력..."
@@ -19,14 +19,14 @@
         </b-form-group>
 
         <b-form-group
-          id="subject-group"
+          id="title-group"
           label="제목:"
-          label-for="subject"
+          label-for="title"
           description="제목을 입력하세요."
         >
           <b-form-input
-            id="subject"
-            v-model="article.subject"
+            id="title"
+            v-model="board.title"
             type="text"
             required
             placeholder="제목 입력..."
@@ -36,7 +36,7 @@
         <b-form-group id="content-group" label="내용:" label-for="content">
           <b-form-textarea
             id="content"
-            v-model="article.content"
+            v-model="board.content"
             placeholder="내용 입력..."
             rows="10"
             max-rows="15"
@@ -53,14 +53,13 @@
         <b-button type="submit" variant="primary" class="m-1" v-else
           >글수정</b-button
         >
-        <b-button type="reset" variant="danger" class="m-1">초기화</b-button>
       </b-form>
     </b-col>
   </b-row>
 </template>
 
 <script>
-import { writeArticle, getArticle, modifyArticle } from "@/api/board";
+import { writeBoard, getBoard, modifyBoard } from "@/api/board";
 import { mapState } from "vuex";
 
 const userStore = "userStore";
@@ -69,11 +68,11 @@ export default {
   name: "BoardInputItem",
   data() {
     return {
-      article: {
-        articleno: 0,
-        userId: "",
-        subject: "",
+      board: {
+        boardNo: 0,
+        title: "",
         content: "",
+        userId: "",
       },
     };
   },
@@ -85,14 +84,14 @@ export default {
   },
   created() {
     if (this.type === "modify") {
-      getArticle(
-        this.$route.params.articleno,
+      getBoard(
+        this.$route.params.boardNo,
         ({ data }) => {
-          // this.article.articleno = data.article.articleno;
-          // this.article.userId = data.article.userId;
-          // this.article.subject = data.article.subject;
-          // this.article.content = data.article.content;
-          this.article = data;
+          // this.board.boardNo = data.board.boardNo;
+          // this.board.userId = data.board.userId;
+          // this.board.title = data.board.title;
+          // this.board.content = data.board.content;
+          this.board = data;
         },
         (error) => {
           console.log(error);
@@ -100,7 +99,7 @@ export default {
       );
       this.isUserId = true;
     } else {
-      this.article.userId = this.userInfo.userId;
+      this.board.userId = this.userInfo.userId;
     }
   },
   methods: {
@@ -109,45 +108,38 @@ export default {
 
       let err = true;
       let msg = "";
-      !this.article.userId &&
+      !this.board.userId &&
         ((msg = "작성자 입력해주세요"),
         (err = false),
         this.$refs.userId.focus());
       err &&
-        !this.article.subject &&
-        ((msg = "제목 입력해주세요"),
-        (err = false),
-        this.$refs.subject.focus());
+        !this.board.title &&
+        ((msg = "제목 입력해주세요"), (err = false), this.$refs.title.focus());
       err &&
-        !this.article.content &&
+        !this.board.content &&
         ((msg = "내용 입력해주세요"),
         (err = false),
         this.$refs.content.focus());
 
       if (!err) alert(msg);
-      else
-        this.type === "register" ? this.registArticle() : this.modifyArticle();
+      else this.type === "register" ? this.registBoard() : this.modifyBoard();
     },
     onReset(event) {
       event.preventDefault();
-      this.article.articleno = 0;
-      this.article.subject = "";
-      this.article.content = "";
+      this.board.boardNo = 0;
+      this.board.title = "";
+      this.board.content = "";
       this.$router.push({ name: "boardList" });
     },
-    registArticle() {
-      writeArticle(
+    registBoard() {
+      writeBoard(
         {
-          userId: this.article.userId,
-          subject: this.article.subject,
-          content: this.article.content,
+          title: this.board.title,
+          content: this.board.content,
+          userId: this.board.userId,
         },
         ({ data }) => {
-          let msg = "등록 처리시 문제가 발생했습니다.";
-          if (data === "success") {
-            msg = "등록이 완료되었습니다.";
-          }
-          alert(msg);
+          console.log(data);
           this.moveList();
         },
         (error) => {
@@ -155,13 +147,12 @@ export default {
         },
       );
     },
-    modifyArticle() {
-      modifyArticle(
+    modifyBoard() {
+      modifyBoard(
         {
-          articleno: this.article.articleno,
-          userId: this.article.userId,
-          subject: this.article.subject,
-          content: this.article.content,
+          boardNo: this.board.boardNo,
+          title: this.board.title,
+          content: this.board.content,
         },
         ({ data }) => {
           let msg = "수정 처리시 문제가 발생했습니다.";
