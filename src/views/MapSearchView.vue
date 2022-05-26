@@ -31,7 +31,9 @@
               :value="item.dongCode"
             >
               <v-list-item-content>
-                <v-list-item-title>{{ item.fullName }}</v-list-item-title>
+                <v-list-item-title class="font-weight-bold">{{
+                  item.fullName
+                }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>
@@ -43,7 +45,9 @@
               :value="item.aptCode"
             >
               <v-list-item-content>
-                <v-list-item-title>{{ item.aptName }}</v-list-item-title>
+                <v-list-item-title class="font-weight-bold">{{
+                  item.aptName
+                }}</v-list-item-title>
                 <v-list-item-subtitle>{{
                   [item.sidoName, item.gugunName, item.dongName].join(" ")
                 }}</v-list-item-subtitle>

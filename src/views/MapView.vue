@@ -1,7 +1,9 @@
 <template>
   <div style="width: 100%; height: 87.5%; position: relative">
     <v-tabs height="3rem" centered>
-      <v-tab class="font-weight-black" @click="goToSearch">아파트 검색</v-tab>
+      <v-tab class="font-weight-bold apt_tab" @click="goToSearch"
+        >아파트 검색</v-tab
+      >
       <v-tab class="font-weight-bold" @click="goToLike">관심 아파트</v-tab>
     </v-tabs>
     <router-view></router-view>
@@ -20,6 +22,10 @@ export default {
 };
 </script>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
+.apt_tab {
+  font-family: "Noto Sans KR", sans-serif;
+}
 #right_side_bar {
   position: absolute;
   top: 0rem;
@@ -104,7 +110,7 @@ hr {
 
 .searched-result {
   position: absolute;
-  top: 0rem;
+  top: 4.5rem;
   left: 0rem;
   width: 100%;
   z-index: 2;

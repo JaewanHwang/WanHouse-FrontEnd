@@ -58,7 +58,6 @@ const houseStore = {
       for (let i in state.likedHouses) {
         if (state.likedHouses[i].aptCode == aptCode) {
           state.likedHouses.splice(i, 1);
-          console.log("HI");
         }
       }
     },

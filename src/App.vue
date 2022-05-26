@@ -14,12 +14,11 @@ export default {
   components: {
     NaviBar,
   },
-  data: () => ({
-    //
-  }),
+  data: () => ({}),
 };
 </script>
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap");
 #header {
   border-color: #0066cc;
   border-bottom-style: solid;

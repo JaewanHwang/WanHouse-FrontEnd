@@ -91,7 +91,7 @@
                 </td>
               </tr>
               <tr>
-                <th class="detail_info_header">지하철역명</th>
+                <th class="detail_info_header">지하철역</th>
                 <td class="detail_info">
                   {{ houseDetailInfo ? houseDetailInfo.subwayStation : "-" }}
                 </td>
