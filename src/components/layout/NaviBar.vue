@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="header_navi" fluid>
     <v-toolbar fluid flat height="50">
       <router-link :to="{ name: 'home' }" class="link black--text">
         <v-toolbar-title class="text-uppercase">
@@ -80,5 +80,10 @@ export default {
 <style scope>
 a {
   text-decoration: none !important;
+}
+.header_navi {
+  padding-left: 5% !important;
+  padding-right: 5% !important;
+  max-width: 100% !important;
 }
 </style>
